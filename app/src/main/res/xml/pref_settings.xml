@@ -93,6 +93,11 @@
             android:summary="@string/settingsBackPressDescription"
             android:title="@string/settingsBackPress" />
 
+        <EditTextPreference
+            android:key="pref_key_maxspeed"
+            android:inputType="number"
+            android:title="Max speed" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

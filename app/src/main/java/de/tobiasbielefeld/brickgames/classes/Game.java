@@ -53,6 +53,8 @@ public abstract class Game {
 
     private final static int AUTO_FIRE_SPEED = 2;
 
+    public static int maxSpeed = 9;
+
     protected abstract void onStart();                                                              //called on every game start, initialize stuff here
 
     protected abstract void calculation();                                                          //called on every tick of the main loop, so calculate stuff here
@@ -156,7 +158,7 @@ public abstract class Game {
                     sLevel++;
                 else {
                     sLevel = 1;
-                    if (sSpeed < 9)
+                    if (sSpeed < maxSpeed)
                         sSpeed++;
                 }
             }
@@ -183,7 +185,7 @@ public abstract class Game {
             else {
                 sLevel = 1;
 
-                if (sSpeed < 9)
+                if (sSpeed < maxSpeed)
                     sSpeed++;
             }
 

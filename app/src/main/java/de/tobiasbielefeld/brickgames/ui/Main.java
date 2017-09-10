@@ -32,6 +32,7 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -170,6 +171,8 @@ public class Main extends CustomAppCompatActivity implements Runnable, View.OnTo
         buttonKeyCodes[5] = savedData.getInt("buttonClose",KeyEvent.KEYCODE_X);
         buttonKeyCodes[6] = savedData.getInt("buttonReset",KeyEvent.KEYCODE_R);
         buttonKeyCodes[7] = savedData.getInt("buttonPause",KeyEvent.KEYCODE_P);
+
+        setGameMaxSpeed();
     }
 
     @Override
@@ -231,6 +234,9 @@ public class Main extends CustomAppCompatActivity implements Runnable, View.OnTo
                 } else {
                     setUpDimensionsLandscape();
                 }
+            }
+            if(data.getStringExtra("pref_key_maxspeed") != null) {
+                setGameMaxSpeed();
             }
         }
     }
@@ -654,6 +660,12 @@ public class Main extends CustomAppCompatActivity implements Runnable, View.OnTo
         params.setMargins(width, 0, 0, 0);
         linearLayoutTexts.setLayoutParams(params);
         linearLayoutGameExtra.setLayoutParams(new LinearLayout.LayoutParams(width * FIELD_WIDTH_2 + distanceWidth * 2, width * FIELD_HEIGHT_2 + distanceHeight * 2));
+    }
+
+    private void setGameMaxSpeed() {
+        if(savedData.getString("pref_key_maxspeed", null) != null) {
+            Game.maxSpeed = Integer.valueOf(savedData.getString("pref_key_maxspeed", null)).intValue();
+        }
     }
 }
 

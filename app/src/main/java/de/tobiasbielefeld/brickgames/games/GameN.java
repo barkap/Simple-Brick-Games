@@ -279,7 +279,7 @@ public class GameN extends Game {
 
                     nextScore();
 
-                    if (sSpeed < 9 && sScore % 20 == 0)
+                    if (sSpeed < maxSpeed && sScore % 20 == 0)
                         sSpeed++;
                 }
             }

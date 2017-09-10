@@ -22,16 +22,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 import de.tobiasbielefeld.brickgames.*;
+import de.tobiasbielefeld.brickgames.classes.Game;
 
 import static de.tobiasbielefeld.brickgames.SharedData.*;
 
@@ -78,6 +82,30 @@ public class Settings extends AppCompatPreferenceActivity
         setPreferenceBackground();
         setPreferenceButton();
         setVibrationStrength();
+
+        /* validate max speed preference */
+        if(savedData.getString("pref_key_maxspeed", null) == null) {
+            savedData.edit().putString("pref_key_maxspeed", String.valueOf(Game.maxSpeed)).commit();
+        }
+        EditTextPreference maxSpeedPreference = (EditTextPreference)findPreference("pref_key_maxspeed");
+        maxSpeedPreference.setText(String.valueOf(Game.maxSpeed));
+        maxSpeedPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                try {
+                    int level = Integer.valueOf((String)o).intValue();
+                    if(level < 1 || level > 9) {
+                        Toast.makeText(Settings.this, "Speed must be between 1 and 9", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                } catch (Exception e) {
+                    return false;
+                }
+                return true;
+            }
+        });
+        setMaxSpeedLevel();
+
     }
 
     void setVibrationStrength() {
@@ -87,6 +115,11 @@ public class Settings extends AppCompatPreferenceActivity
             mVibrationDialog.setSummary(getString(R.string.off));
         else
             mVibrationDialog.setSummary(String.format(Locale.getDefault(),"%s ms",strength));
+    }
+
+    void setMaxSpeedLevel() {
+        String maxSpeed = savedData.getString("pref_key_maxspeed", null);
+        findPreference("pref_key_maxspeed").setSummary(maxSpeed);
     }
 
     void  setPreferenceTextures() {
@@ -191,6 +224,11 @@ public class Settings extends AppCompatPreferenceActivity
             case "pref_key_orientation":
                 setOrientation();
                 break;
+            case "pref_key_maxspeed":
+                String newSpeed = sharedPreferences.getString(key, null);
+                getIntent().putExtra("pref_key_maxspeed", newSpeed);
+                setMaxSpeedLevel();
+                break;
         }
 
         setResult(RESULT_OK, getIntent());
@@ -229,4 +267,5 @@ public class Settings extends AppCompatPreferenceActivity
                 break;
         }
     }
+
 }
